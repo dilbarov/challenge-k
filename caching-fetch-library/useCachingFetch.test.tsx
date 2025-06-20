@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  cache,
   initializeCache,
   preloadCachingFetch,
   serializeCache,
@@ -112,5 +113,29 @@ describe('UseCachingFetch Tests', () => {
 
       expect(parsed[mockUrl]).toEqual(cachedData);
     });
+  });
+
+  describe('serializeCache validation', () => {
+    afterEach(() => {
+      wipeCache();
+    });
+
+    it('throws when serializing invalid cache entry', () => {
+      // @ts-expect-error
+      cache.set('invalid', { isLoading: 'yes', data: 123 });
+
+      expect(() => serializeCache()).toThrowError(/Invalid cache entry for invalid/);
+    });
+  });
+
+  it('initializes only valid entries', () => {
+    const valid = JSON.stringify({
+      one: { isLoading: false, data: { ok: true } },
+    });
+
+    initializeCache(valid);
+    const serialized = serializeCache();
+    const parsed = JSON.parse(serialized);
+    expect(parsed.one).toEqual({ isLoading: false, data: { ok: true } });
   });
 });

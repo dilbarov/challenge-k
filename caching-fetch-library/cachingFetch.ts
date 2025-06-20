@@ -16,7 +16,7 @@ type DataState = {
   data: unknown;
 };
 
-const cache = new Map<string, DataState>();
+export const cache = new Map<string, DataState>();
 
 /**
  * 1. Implement a caching fetch hook. The hook should return an object with the following properties:
