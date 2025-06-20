@@ -103,19 +103,48 @@ export const preloadCachingFetch = async (url: string): Promise<void> => {
  *
  */
 export const serializeCache = (): string => {
-  if (cache.size > 0) {
-    return JSON.stringify(Object.fromEntries(cache.entries()));
+  const validEntries: [string, DataState][] = [];
+
+  for (const [key, entry] of cache.entries()) {
+    if (validateData(entry)) {
+      validEntries.push([key, entry]);
+      continue;
+    }
+
+    throw new Error(`Invalid cache entry for ${key}`);
   }
-  return '{}';
+
+  return JSON.stringify(Object.fromEntries(validEntries));
 };
 
 export const initializeCache = (serializedCache: string): void => {
-  const dataToCache = JSON.parse(serializedCache) as Record<string, DataState>;
-  for (const [url, data] of Object.entries(dataToCache)) {
-    cache.set(url, data);
+  try {
+    const raw = JSON.parse(serializedCache);
+    if (typeof raw !== 'object' || raw === null) return;
+
+    for (const [key, entry] of Object.entries(raw)) {
+      if (validateData(entry)) {
+        cache.set(key, entry as DataState);
+        continue;
+      }
+
+      throw new Error(`Invalid cache entry for ${key}`);
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
 export const wipeCache = (): void => {
   cache.clear();
+};
+
+const validateData = (entry: unknown): boolean => {
+  return (
+    typeof entry === 'object' &&
+    entry !== null &&
+    'isLoading' in entry &&
+    typeof entry.isLoading === 'boolean' &&
+    'data' in entry
+  );
 };
