@@ -37,14 +37,14 @@ const cache = new Map<string, DataState>();
  *
  */
 export const useCachingFetch: UseCachingFetch = (url) => {
-  const [isLoading, setIsLoading] = useState(cache.get(url)?.isLoading || false);
-  const [data, setData] = useState<unknown>(cache.get(url)?.data || null);
+  const cached = cache.get(url);
+
+  const [isLoading, setIsLoading] = useState(cached?.isLoading || false);
+  const [data, setData] = useState<unknown>(cached?.data || null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (isLoading) return;
-
-    if (data !== null) return;
+    if (isLoading || data !== null) return;
 
     setIsLoading(true);
     cache.set(url, { isLoading: true, data: null });
