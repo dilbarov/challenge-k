@@ -1,8 +1,5 @@
 import React, { FC } from 'react';
-import {
-  preloadCachingFetch,
-  useCachingFetch,
-} from '../caching-fetch-library/cachingFetch';
+import { preloadCachingFetch, useCachingFetch } from '../caching-fetch-library/cachingFetch';
 import Person from './Person';
 import { validateData } from './validation';
 

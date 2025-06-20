@@ -42,17 +42,13 @@ const runServer = async () => {
   // serve the application, with data loader on the server
   fastify.get('/appWithSSRData', async (request, reply) => {
     wipeCache();
-    reply
-      .header('content-type', 'text/html')
-      .send(buildHtmlDoc(await renderApp(true)));
+    reply.header('content-type', 'text/html').send(buildHtmlDoc(await renderApp(true)));
   });
 
   // serve the application, without data loader on the server
   fastify.get('/appWithoutSSRData', async (request, reply) => {
     wipeCache();
-    reply
-      .header('content-type', 'text/html')
-      .send(buildHtmlDoc(await renderApp(false)));
+    reply.header('content-type', 'text/html').send(buildHtmlDoc(await renderApp(false)));
   });
 
   fastify.listen({ port: 3000 }, (err, address) => {

@@ -3,20 +3,20 @@
 // However, you must not change the surface API presented from this file,
 // and you should not need to change any other files in the project to complete the challenge
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
 type UseCachingFetch = (url: string) => {
-    isLoading: boolean;
-    data: unknown;
-    error: Error | null;
+  isLoading: boolean;
+  data: unknown;
+  error: Error | null;
 };
 
 type DataState = {
-    isLoading: boolean;
-    data: unknown;
-}
+  isLoading: boolean;
+  data: unknown;
+};
 
-const cache = new Map<string, DataState>()
+const cache = new Map<string, DataState>();
 
 /**
  * 1. Implement a caching fetch hook. The hook should return an object with the following properties:
@@ -37,33 +37,33 @@ const cache = new Map<string, DataState>()
  *
  */
 export const useCachingFetch: UseCachingFetch = (url) => {
-    const [isLoading, setIsLoading] = useState(cache.get(url)?.isLoading || false);
-    const [data, setData] = useState<unknown>(cache.get(url)?.data || null);
-    const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(cache.get(url)?.isLoading || false);
+  const [data, setData] = useState<unknown>(cache.get(url)?.data || null);
+  const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        if (isLoading) return;
+  useEffect(() => {
+    if (isLoading) return;
 
-        if (data !== null) return;
+    if (data !== null) return;
 
-        setIsLoading(true);
-        cache.set(url, {isLoading: true, data: null});
+    setIsLoading(true);
+    cache.set(url, { isLoading: true, data: null });
 
-        fetch(url)
-            .then(response => response.json())
-            .then(parsedBody => {
-                setData(parsedBody)
-                cache.set(url, {isLoading: false, data: parsedBody})
-            })
-            .catch(reason => setError(reason as Error))
-            .finally(() => setIsLoading(false));
-    }, [url]);
+    fetch(url)
+      .then((response) => response.json())
+      .then((parsedBody) => {
+        setData(parsedBody);
+        cache.set(url, { isLoading: false, data: parsedBody });
+      })
+      .catch((reason) => setError(reason as Error))
+      .finally(() => setIsLoading(false));
+  }, [url]);
 
-    return {
-        data,
-        isLoading,
-        error,
-    };
+  return {
+    data,
+    isLoading,
+    error,
+  };
 };
 
 /**
@@ -81,9 +81,9 @@ export const useCachingFetch: UseCachingFetch = (url) => {
  *
  */
 export const preloadCachingFetch = async (url: string): Promise<void> => {
-    const response = await fetch(url);
-    const data = await response.json();
-    cache.set(url, {isLoading: false, data});
+  const response = await fetch(url);
+  const data = await response.json();
+  cache.set(url, { isLoading: false, data });
 };
 
 /**
@@ -103,19 +103,19 @@ export const preloadCachingFetch = async (url: string): Promise<void> => {
  *
  */
 export const serializeCache = (): string => {
-    if (cache.size > 0) {
-        return JSON.stringify(Object.fromEntries(cache.entries()));
-    }
-    return '{}';
-}
+  if (cache.size > 0) {
+    return JSON.stringify(Object.fromEntries(cache.entries()));
+  }
+  return '{}';
+};
 
 export const initializeCache = (serializedCache: string): void => {
-    const dataToCache = JSON.parse(serializedCache) as Record<string, DataState>;
-    for (const [url, data] of Object.entries(dataToCache)) {
-        cache.set(url, data);
-    }
+  const dataToCache = JSON.parse(serializedCache) as Record<string, DataState>;
+  for (const [url, data] of Object.entries(dataToCache)) {
+    cache.set(url, data);
+  }
 };
 
 export const wipeCache = (): void => {
-    cache.clear();
+  cache.clear();
 };

@@ -7,9 +7,10 @@ Firstly, the project set-up is the absolute bare minimum, only including a tiny 
 The project itself contains a framework, a caching fetch library, and a web application.
 
 The framework is complete. It contains:
-* a server
-* a client runtime
-* an MSW mock server, to allow you to run this project without a network connection.
+
+- a server
+- a client runtime
+- an MSW mock server, to allow you to run this project without a network connection.
 
 The application is also complete. It will render a very basic directory of people.
 
@@ -27,14 +28,16 @@ Visit [http://localhost:3000](http://localhost:3000) to see the app running.
 You should see a welcome page with 2 links to other pages.
 
 When visiting the links:
-* on http://127.0.0.1:3000/appWithoutSSRData you will see 
+
+- on http://127.0.0.1:3000/appWithoutSSRData you will see
   - `Error: UseCachingFetch has not been implemented`
-* on http://127.0.0.1:3000/appWithSSRData you will see
+- on http://127.0.0.1:3000/appWithSSRData you will see
   - ```{
     "statusCode": 500,
     "error": "Internal Server Error",
     "message": "preloadCachingFetch has not been implemented"
     }
+    ```
 
 You are now ready to begin the tasks. Please read the below completely before beginning.
 
