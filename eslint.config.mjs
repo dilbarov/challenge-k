@@ -8,7 +8,7 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['node_modules', 'dist', '.idea'],
+    ignores: ['node_modules', 'dist', '.idea', '**/__mocks__/**', '**/*.{spec,test}.{ts,tsx}'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
