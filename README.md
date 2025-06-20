@@ -60,4 +60,5 @@ Run:
 - UI tests to validate visual behavior of components.
 - CI/CD setup for automated testing and deployment.
 - Pre-commit hooks (husky, lint-staged) to enforce code quality before commits.
+- Cache persistence in localStorage or other client storage mechanisms is not yet implemented.
 
